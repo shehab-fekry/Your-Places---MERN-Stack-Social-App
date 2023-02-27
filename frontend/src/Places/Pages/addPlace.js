@@ -174,7 +174,7 @@ const AddPlace = () => {
         data.description = state.inputs[2].value;
         data.address = state.inputs[3].value;
         data.creator = auth.userID;
-        data.coordinates = {lat: 0.0, lng: 0.0},
+        data.coordinates = {lat: 0.0, lng: 0.0};
 
         console.log(data)
 

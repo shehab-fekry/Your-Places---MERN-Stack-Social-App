@@ -4,7 +4,7 @@ import './Spinner.css';
 const Spinner = () => {
     return(
         <React.Fragment>
-            <div class="hourglass"></div>
+            <div className="hourglass"></div>
         </React.Fragment>
     )
 }

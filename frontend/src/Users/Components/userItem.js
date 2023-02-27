@@ -4,7 +4,7 @@ import { AuthContext } from '../../Context/authContext';
 
 import styles from './userItem.module.css';
 
-const userItem = (props) => {
+const UserItem = (props) => {
     let auth = useContext(AuthContext);
 
     let userItemStyle = [styles.item_container];
@@ -27,4 +27,4 @@ const userItem = (props) => {
     )
 }
 
-export default userItem;
+export default UserItem;
