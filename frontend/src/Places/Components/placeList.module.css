@@ -1,0 +1,22 @@
+.placeList {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    margin-top: 25px;
+    width: 100%;
+    height: 100%;
+    /* border: 1px solid white; */
+}
+
+.noContent {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 550px;
+    height: 150px;
+    /* margin: 10px; */
+    border-radius: 10px;
+    background-color: white;
+}

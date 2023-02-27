@@ -1,0 +1,23 @@
+.addPlace {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    /* position: relative; */
+    width: 100%;
+    height: calc(100vh - 70px);
+    background-color: #333;
+    /* border: 1px solid black */
+}
+
+.card {
+    /* width: 50%; */
+    padding: 15px;
+    border-radius: 10px;
+    background-color: white;
+}
+
+.card_actions {
+    display: flex;
+    flex-flow: row;
+}

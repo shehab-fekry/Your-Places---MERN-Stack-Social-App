@@ -1,0 +1,56 @@
+.btn {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 18px;
+    width: 140px;
+    height: 35px;
+    border-radius: 5px;
+    cursor: pointer;
+    text-decoration: none;
+    /* padding: 10px; */
+}
+
+.danger {
+    color: white;
+    background-color:maroon;
+    border: none;
+
+}
+
+.pink {
+    color: white;
+    background-color:#ff0055;
+    border: none;
+}
+
+.inverse {
+    color:#ff0055;
+    background-color: white;
+    border: 1px solid #ff0055;
+}
+
+.inverse:hover {
+    color: white;
+    background-color:#ff0055;
+}
+
+
+
+
+
+
+button:disabled {
+    background-color: #ccc;
+    color: #333;
+    cursor: default;
+}
+
+.marginRight {
+    margin-right: 20px;
+}
+
+.marginLeft {
+    margin: 10px;
+    margin-left: 65px;
+}

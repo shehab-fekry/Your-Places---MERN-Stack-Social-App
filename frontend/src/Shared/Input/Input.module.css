@@ -1,0 +1,54 @@
+.input {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
+    align-items: center;
+    width: 500px;
+    /* margin: 5px; */
+    /* border: 1px solid black; */
+}
+
+.input div {
+    width: 75%;
+    padding: 5px;
+    font-size: 20px;
+    font-weight: 500;
+    /* border: 1px solid blue; */
+}
+
+.input input {
+    height: 30px;
+    width: 100%;
+    padding-left: 7px;
+    /* border: 0px; */
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+.input textarea {
+    padding: 5px;
+    width: 100%;
+    /* border: 0px; */
+    border: 1px solid black;
+    border-radius: 5px;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+
+.message {
+    margin-top: -5px;
+    margin-left: 10px;
+    font-size: 12px !important;
+    font-weight: 500 !important;
+    /* border: 1px solid black; */
+}
+
+.error {
+    color: red;
+}
+
+.verified {
+    color: green;
+}
