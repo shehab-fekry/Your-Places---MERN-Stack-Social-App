@@ -33,8 +33,10 @@ exports.getPlaceById = (req, res, next) => {
 }
 
 exports.createPlace = (req, res, next) => {
-    const {imageURL, title, description, address, coordinates, creator} = req.body;
+    let {imageURL, title, description, address, coordinates, creator} = req.body;
     let errorsArray = validationResult(req).errors;
+
+    coordinates = {lat: coordinates[0], lng: coordinates[1]};
     
     if(errorsArray.length !== 0){
         return res.json({errors: errorsArray});

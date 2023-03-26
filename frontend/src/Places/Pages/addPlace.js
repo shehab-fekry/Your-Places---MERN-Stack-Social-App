@@ -1,4 +1,4 @@
-import React, {useContext, useState} from "react";
+import React, {useContext, useState, useRef, useEffect} from "react";
 import { useNavigate } from "react-router-dom";
 import styles from './addPlace.module.css';
 import Input from '../../Shared/Input/Input';
@@ -6,6 +6,9 @@ import Button from '../../Shared/Buttons/Button';
 import btnStyle from '../../Shared/Buttons/Buttons.module.css';
 import axios from "axios";
 import { AuthContext } from "../../Context/authContext";
+import mapboxgl from 'mapbox-gl';
+import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
+
 
 const AddPlace = () => {
     let navigate = useNavigate();
@@ -64,9 +67,69 @@ const AddPlace = () => {
                 isValid: false,
                 errorMessage: 'required, min-length of 5 chars',
             },
+            {
+                label: 'Coordinates',
+                value: [0, 0],
+                isValid: false,
+            }
         ],
         overallValidation: false,
     })
+
+    let [coords, setCoords] = useState([]);
+    let [prevMarker, setPrevMarker] = useState(null);
+    let map = useRef(null);
+    let mapContainer = useRef(null);
+
+    useEffect(() => {
+        // initializing the map
+        map = new mapboxgl.Map({
+            container: mapContainer.current,
+            style: 'mapbox://styles/mapbox/streets-v11',
+            center: [-70.9, 42.35],
+            zoom: 9,
+        })
+
+        // Add navigation control (the +/- zoom buttons)
+        map.addControl(new mapboxgl.NavigationControl(), "top-right");
+
+        map.on('click', (e) => {
+            let lngLat = e.lngLat;
+            let latitude = lngLat.lat;
+            let longitude = lngLat.lng;
+
+            // Create a new marker and replace it with the old 
+            prevMarker ? prevMarker.remove() : null;
+            prevMarker = new mapboxgl.Marker({color: '#ff0055'}).setLngLat([longitude, latitude]).addTo(map);
+            setPrevMarker(prevMarker);
+
+            // saving and validate the coordinates
+            let newState = state;
+            newState.inputs[4].value = [longitude, latitude];
+            newState.inputs[4].isValid = true;
+            setState(newState);
+            overallValidation()
+        });
+
+        // add geocoder to the map
+        const geocoder = new MapboxGeocoder({
+            accessToken: mapboxgl.accessToken,
+            mapboxgl: mapboxgl,
+            placeholder: 'Enter an address or place name',
+            marker: {
+                color: '#ff0055',
+            }
+        });
+        map.addControl(geocoder, 'top-left');
+
+        geocoder.on('geolocate', (e) => {
+            var lon = e.coords.longitude;
+            var lat = e.coords.latitude
+            var position = [lon, lat];
+            console.log(position);
+      });
+
+    }, [mapContainer])
 
     const onChangeHandler = (event, index) => {
         let inputValue = event.target.value;
@@ -173,8 +236,8 @@ const AddPlace = () => {
         data.title = state.inputs[1].value;
         data.description = state.inputs[2].value;
         data.address = state.inputs[3].value;
+        data.coordinates = state.inputs[4].value;
         data.creator = auth.userID;
-        data.coordinates = {lat: 0.0, lng: 0.0};
 
         console.log(data)
 
@@ -186,13 +249,15 @@ const AddPlace = () => {
         .catch(err => console.log(err))
     }
 
+
     
     return (
         <div className={styles.addPlace}>
             <div className={styles.card}>
+                <div className={styles.inputSide}>
                 {
                     state.inputs.map((input, index) => {
-                        return <Input
+                        return index == 4 ? null : <Input
                     key={index}
                     element={input.element} 
                     type={input.type} 
@@ -208,6 +273,10 @@ const AddPlace = () => {
                 class={`${btnStyle.pink} ${btnStyle.btn} ${btnStyle.marginLeft}`}
                 disabled={!state.overallValidation}
                 onClick={submitHandler}>Add Place</Button>
+            </div>
+            <div ref={mapContainer} className={styles.mapSide}>
+                {/* <div ref={mapContainer}></div> */}
+            </div>
             </div>
         </div>
     )

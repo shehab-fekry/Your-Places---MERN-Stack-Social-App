@@ -2,7 +2,7 @@ import React, {useContext, useState} from "react";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
-import styles from '../../Places/Pages/addPlace.module.css';
+import styles from './joinUs.module.css';
 import Input from '../../Shared/Input/Input';
 import Button from '../../Shared/Buttons/Button';
 import btnStyle from '../../Shared/Buttons/Buttons.module.css';
@@ -239,7 +239,7 @@ const JoinUs = () => {
 
 
     return (
-        <div className={styles.addPlace}>
+        <div className={styles.joinus}>
             <div className={styles.card}>
                 {
                 state.inputs.map((input, index) => {
