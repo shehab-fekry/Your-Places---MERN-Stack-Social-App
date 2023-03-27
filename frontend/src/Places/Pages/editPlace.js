@@ -1,6 +1,6 @@
 import React, {useContext, useEffect, useState} from "react";
 import {useParams, useNavigate} from 'react-router-dom';
-import styles from './addPlace.module.css';
+import styles from '../../Users/Pages/joinUs.module.css';
 import Input from '../../Shared/Input/Input';
 import Button from '../../Shared/Buttons/Button';
 import btnStyle from '../../Shared/Buttons/Buttons.module.css';
@@ -10,7 +10,7 @@ import { AuthContext } from "../../Context/authContext";
 const EditPlace = () => {
     const params = useParams();
     const auth = useContext(AuthContext);
-    const navigate = useNavigate();
+    const navigate = useNavigate(); 
 
     let [coordinates, setCoordinates] = useState({lat: 0.0, lng:0.0});
     let [id, setID] = useState('');
@@ -216,7 +216,7 @@ const EditPlace = () => {
     }
 
     return (
-        <div className={styles.addPlace}>
+        <div className={styles.joinus}>
             <div className={styles.card}>
                 {
                 state.inputs.map((input, index) => {

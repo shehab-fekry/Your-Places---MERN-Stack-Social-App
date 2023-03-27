@@ -1,7 +1,7 @@
 import './App.css';
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import mapboxgl from 'mapbox-gl'; 
-
+import React from 'react'
 import NavBar from './Shared/Navigation/NavBar';
 import Users from './Users/Pages/Users';
 import AddPlace from './Places/Pages/addPlace';
@@ -28,46 +28,43 @@ function App() {
     else logout()
   }, [])
 
-  const login = (user, token) => {
+  const login = React.useCallback((user, token) => {
     setUserID(user[0]._id);
     setToken(token);
     localStorage.setItem('token', token)
     localStorage.setItem('id', user[0]._id)
-  }
+  }, [])
 
-  const logout = () => {
+  const logout = React.useCallback(() => {
     setUserID('');
     setToken(null);
     localStorage.removeItem('token')
     localStorage.removeItem('id')
-  }
+  }, [])
 
 
   // Routes Protection
-  let routes;
-  if(!!token){
-    routes = (
-      <Routes>
-        <Route path='/' exact element={<Users/>}/>
-        <Route path='/places/new' exact element={<AddPlace/>}/>
-        <Route path='/places/:placeID' element={<EditPlace/>}/>
-        <Route path='/:userID/places' exact element={<UserPlaces/>}/>
-        <Route path='*' element={<Users/>}/>
-      </Routes>
-    )
-  } else {
-    routes = (
-      <Routes>
+  const routes = React.useMemo(() => {
+    return !!token ? (
+        <Routes>
           <Route path='/' exact element={<Users/>}/>
-          <Route path='/joinus' exact element={<JoinUs/>}/>
+          <Route path='/places/new' exact element={<AddPlace/>}/>
+          <Route path='/places/:placeID' element={<EditPlace/>}/>
           <Route path='/:userID/places' exact element={<UserPlaces/>}/>
           <Route path='*' element={<Users/>}/>
-      </Routes>
-    )
-  }
+        </Routes>
+      ) : (
+        <Routes>
+            <Route path='/' exact element={<Users/>}/>
+            <Route path='/joinus' exact element={<JoinUs/>}/>
+            <Route path='/:userID/places' exact element={<UserPlaces/>}/>
+            <Route path='*' element={<Users/>}/>
+        </Routes>
+      )
+  }, [token])
 
   return (
-    <AuthContext.Provider value={{token: token, isLogedIn: !!token, userID: userID, login: login, logout: logout}}>
+    <AuthContext.Provider value={{token, isLogedIn: !!token, userID, login, logout}}>
       <BrowserRouter>
         <NavBar/>
         {routes}

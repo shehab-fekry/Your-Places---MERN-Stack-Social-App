@@ -27,3 +27,7 @@
     height: 400px;
     /* border: 1px solid black; */
 }
+
+.inputSide {
+    width: 50%;
+}

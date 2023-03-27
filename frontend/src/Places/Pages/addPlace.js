@@ -76,7 +76,6 @@ const AddPlace = () => {
         overallValidation: false,
     })
 
-    let [coords, setCoords] = useState([]);
     let [prevMarker, setPrevMarker] = useState(null);
     let map = useRef(null);
     let mapContainer = useRef(null);
@@ -99,11 +98,11 @@ const AddPlace = () => {
             let longitude = lngLat.lng;
 
             // Create a new marker and replace it with the old 
-            prevMarker ? prevMarker.remove() : null;
+            if(prevMarker) prevMarker.remove();
             prevMarker = new mapboxgl.Marker({color: '#ff0055'}).setLngLat([longitude, latitude]).addTo(map);
             setPrevMarker(prevMarker);
 
-            // saving and validate the coordinates
+            // saving and validating the coordinates
             let newState = state;
             newState.inputs[4].value = [longitude, latitude];
             newState.inputs[4].isValid = true;
@@ -115,20 +114,28 @@ const AddPlace = () => {
         const geocoder = new MapboxGeocoder({
             accessToken: mapboxgl.accessToken,
             mapboxgl: mapboxgl,
-            placeholder: 'Enter an address or place name',
-            marker: {
-                color: '#ff0055',
-            }
+            placeholder: 'Enter an address',
+            marker: false,
+            // marker: {
+            //     color: '#ff0055',
+            // }
         });
         map.addControl(geocoder, 'top-left');
 
-        geocoder.on('geolocate', (e) => {
-            var lon = e.coords.longitude;
-            var lat = e.coords.latitude
-            var position = [lon, lat];
-            console.log(position);
-      });
+        // Retrieve the latitude and longitude from the result
+        geocoder.on('result', function(e) {
+            let lat = e.result.center[1];
+            let lng = e.result.center[0];
+            prevMarker = new mapboxgl.Marker({color: '#ff0055'}).setLngLat([lng, lat]).addTo(map);
 
+            // saving and validating the coordinates
+            let newState = state;
+            newState.inputs[4].value = [lng, lat];
+            newState.inputs[4].isValid = true;
+            setState(newState);
+            overallValidation()
+          });
+          
     }, [mapContainer])
 
     const onChangeHandler = (event, index) => {
@@ -257,7 +264,7 @@ const AddPlace = () => {
                 <div className={styles.inputSide}>
                 {
                     state.inputs.map((input, index) => {
-                        return index == 4 ? null : <Input
+                        return index === 4 ? null : <Input
                     key={index}
                     element={input.element} 
                     type={input.type} 

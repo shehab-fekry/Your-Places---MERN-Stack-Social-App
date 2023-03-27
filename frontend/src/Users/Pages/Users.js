@@ -1,11 +1,9 @@
-import React, { useEffect, useState, useContext } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Users.module.css'
 import UserList from '../Components/userList';
 import axios from 'axios';
-import { AuthContext } from '../../Context/authContext';
 
-const Users = () => {
-    const auth = useContext(AuthContext);
+const Users = () => {    
     let [users, setUsers] = useState([]);
     useEffect(() => {
         axios.get('http://localhost:8000/api/users')

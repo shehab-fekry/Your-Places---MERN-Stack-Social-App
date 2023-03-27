@@ -14,6 +14,8 @@ const NavBar = () => {
         // console.log(isMenuOpen)
     }
 
+    console.log('navbar')
+
     return (
         <div className={styles.NavBar}>
             <div className={styles.NavBar_Logo}>
