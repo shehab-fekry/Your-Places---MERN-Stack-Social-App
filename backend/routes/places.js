@@ -4,6 +4,7 @@ const app = express();
 const placesCTRLS = require('../controllers/placesC');
 const validate = require('../middlewares/validation/placesData');
 const userTokenAuth = require('../middlewares/userTokenAuth');
+const fileUpload = require('../middlewares/fileUpload');
 
 const validation = [validate.title, validate.description, validate.address, validate.coordinates]; 
 
@@ -18,7 +19,7 @@ app.get('/:placeID', placesCTRLS.getPlaceById);
 app.use(userTokenAuth)
 
 // create new place
-app.post('/new', validation, placesCTRLS.createPlace)
+app.post('/new', fileUpload.single('imageURL'), validation, placesCTRLS.createPlace)
 
 // update specific place
 app.patch('/:placeID', validation, placesCTRLS.updatePlaceById);

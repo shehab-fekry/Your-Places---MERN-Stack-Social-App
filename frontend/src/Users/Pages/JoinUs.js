@@ -19,7 +19,7 @@ const JoinUs = () => {
                 type: 'text',
                 label: 'Name',
                 value: '',
-                placeholder: 'Ex: Mark',
+                placeholder: 'Ex: Sam Jackson',
                 validation: {
                     isRequired: true,
                     minLen: 5,
@@ -32,7 +32,7 @@ const JoinUs = () => {
                 type: 'email',
                 label: 'Email',
                 value: '',
-                placeholder: 'Ex: example@email.com',
+                placeholder: 'example@gmail.com',
                 validation: {
                     isRequired: true,
                     minLen: 5,

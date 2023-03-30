@@ -20,7 +20,7 @@ module.exports = (req, res, next) => {
     // if token exist in request headers
     try{
         let decodedToken = jwt.verify(token, 'secret_key_must_not_tell');
-        // this userAuthData wil be used in verifying if the logged in user
+        // this userAuthData will be used in verifying if the logged in user
         // is also the creator of the place when (update, delete).
         req.userAuthData = {userID: decodedToken.userID}
         // console.log(decodedToken)

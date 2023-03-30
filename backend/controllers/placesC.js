@@ -1,3 +1,4 @@
+const fs = require('fs');
 const { v4: uuidv4 } = require('uuid');
 const { validationResult } = require('express-validator');
 const Places = require('../Models/placesM');
@@ -19,6 +20,7 @@ exports.getPlacesByUserId = (req, res, next) => {
     });
 }
 
+
 exports.getPlaceById = (req, res, next) => {
     let placeID = req.params.placeID;
 
@@ -32,17 +34,18 @@ exports.getPlaceById = (req, res, next) => {
     });
 }
 
-exports.createPlace = (req, res, next) => {
-    let {imageURL, title, description, address, coordinates, creator} = req.body;
-    let errorsArray = validationResult(req).errors;
 
-    coordinates = {lat: coordinates[0], lng: coordinates[1]};
+exports.createPlace = (req, res, next) => {
+    let {title, description, address, coordinates, creator} = req.body;
+    coordinates = {lat: coordinates.split(',')[0], lng: coordinates.split(',')[1]};
+    let imagePath = req.file.path;
     
+    let errorsArray = validationResult(req).errors;
     if(errorsArray.length !== 0){
         return res.json({errors: errorsArray});
     }
 
-    let newPlace = new Places({imageURL, title, description, address, coordinates, creator});
+    let newPlace = new Places({imagePath, title, description, address, coordinates, creator});
     newPlace.save()
     .then(result => {
         Users.findById({_id: creator})
@@ -57,19 +60,14 @@ exports.createPlace = (req, res, next) => {
         console.log(err);
         res.status(422).json({message: 'Somthing went wrong, please try again!'});
     });
-
-    
-    // let place = {id: uuidv4(), imageURL, title, description, address, coordinates, creator};
-    // DUMMY_PLACES.push(place);
 }
+
 
 exports.updatePlaceById =(req, res, next) => {
     const placeID = req.params.placeID;
-    const {imageURL, title, description, address, coordinates} = req.body;
+    const {imagePath, title, description, address, coordinates} = req.body;
+    
     let errorsArray = validationResult(req).errors;
-
-
-    // console.log(req.body);
     if(errorsArray.length !== 0){
         return res.json({errors: errorsArray});
     }
@@ -81,7 +79,7 @@ exports.updatePlaceById =(req, res, next) => {
             return res.status(401).json({message: `you are not authorized to update this place!`});
         }
 
-        place.imageURL = imageURL;
+        place.imagePath = imagePath;
         place.title = title;
         place.description = description;
         place.address = address;
@@ -96,6 +94,7 @@ exports.updatePlaceById =(req, res, next) => {
     });
 }
 
+
 exports.deletePlaceById = (req, res, next) => {
     const {placeID, userID} = req.params;
 
@@ -106,6 +105,12 @@ exports.deletePlaceById = (req, res, next) => {
             return res.status(401).json({message: `you are not authorized to delete this place!`});
         }
 
+        // delete image from uploads folder
+        fs.unlink(place.imagePath, err => {
+            err ? console.log(err) : null
+        })
+
+        // delete image from database
         Places.deleteOne({_id: placeID})
         .then(res => {
             Users.findById(userID)
@@ -113,7 +118,7 @@ exports.deletePlaceById = (req, res, next) => {
                 user.places = user.places.filter(place => String(place) !== placeID);
                 user.save()
             })
-            .catch(err => console.log(err))       
+            .catch(err => console.log(err))
         })
         .catch(err => console.log(err)) 
     })

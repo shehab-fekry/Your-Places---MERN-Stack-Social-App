@@ -3,7 +3,19 @@ import styles from './Input.module.css';
 
 const input = (props) => {
     let content;
-    if(props.element === 'input')
+    if(props.element === 'input' && props.type === 'file'){
+        content = (
+            <div className={styles.fileCard}>
+                <button className={styles.fileBtn}>Upload Image</button>
+                <input
+                className={styles.fileInput}
+                type={props.type}
+                accept="image/png, image/jpeg, image/jpg"
+                onChange={props.onChange}/>
+            </div>
+        )
+    }
+    else if(props.element === 'input')
     {
         content = (
         <input

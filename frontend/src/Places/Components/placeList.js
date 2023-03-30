@@ -38,7 +38,7 @@ const PLaceList = (props) => {
             return <PlaceItem 
             key={place._id} 
             id={place._id}
-            imageURL={place.imageURL}
+            imagePath={`http://localhost:8000/${place.imagePath}`}
             title={place.title}
             description={place.description}
             address={place.address}

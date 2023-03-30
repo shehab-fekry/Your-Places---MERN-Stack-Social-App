@@ -57,7 +57,7 @@ const PLaceItem = (props) => {
             </Modal>
             <div className={styles.placeItem}>
                 <div className={styles.placeItem_image}>
-                    <img src={props.imageURL} alt={props.title}/>
+                    <img src={props.imagePath} alt={props.title}/>
                 </div>
                 <div className={styles.placeItem_info}>
                     <h2>{props.title}</h2>

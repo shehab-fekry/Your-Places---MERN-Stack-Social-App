@@ -4,7 +4,7 @@ const Users = require('./usersM');
 const Schema = mongoose.Schema;
 
 const placeSchema = new Schema({
-    imageURL: {
+    imagePath: {
         type: String,
         required: true,
     },
@@ -36,15 +36,5 @@ const placeSchema = new Schema({
         ref: 'User',
     },
 })
-
-placeSchema.methods.addCreatedPlaceToUser = function (creatorID, createdPlace) {
-    Users.findById({_id: creatorID})
-    .then(user => {
-        user.places.push(createdPlace._id);
-        // console.log(user);
-        return user.save()
-    })
-    .catch(err => console.log(err));
-}
 
 module.exports = mongoose.model('Place', placeSchema);

@@ -13,19 +13,20 @@ import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 const AddPlace = () => {
     let navigate = useNavigate();
 
+    let [file, setFile] = useState({})
     let [state, setState] = useState({
         inputs: [
             {
                 element: 'input',
-                type: 'text',
+                type: 'file',
                 label: 'Image',
                 value: '',
-                placeholder: 'Ex: URL',
+                // placeholder: 'Ex: URL',
                 validation: {
                     isRequired: true,
                 },
                 isValid: false,
-                errorMessage: 'required, please add any image URL',
+                errorMessage: 'required, please upload an image.',
             },
             {
                 element: 'input',
@@ -91,6 +92,7 @@ const AddPlace = () => {
 
         // Add navigation control (the +/- zoom buttons)
         map.addControl(new mapboxgl.NavigationControl(), "top-right");
+        map.addControl(new mapboxgl.FullscreenControl());
 
         map.on('click', (e) => {
             let lngLat = e.lngLat;
@@ -126,6 +128,7 @@ const AddPlace = () => {
         geocoder.on('result', function(e) {
             let lat = e.result.center[1];
             let lng = e.result.center[0];
+            if(prevMarker) prevMarker.remove();
             prevMarker = new mapboxgl.Marker({color: '#ff0055'}).setLngLat([lng, lat]).addTo(map);
 
             // saving and validating the coordinates
@@ -146,7 +149,7 @@ const AddPlace = () => {
         switch(index)
         {
             case 0:{
-                validateImage(inputValue, index);
+                validateImage(inputValue, index, event);
                 break;
             }
             case 1:{
@@ -168,7 +171,10 @@ const AddPlace = () => {
             overallValidation()
         }
         
-    const validateImage = (value, index) => {
+    const validateImage = (value, index, event) => {
+        const imagefile = event.target.files[0];
+        setFile(imagefile)
+
         let { isRequired } = state.inputs[index].validation;
         let validity = true;
         
@@ -237,16 +243,13 @@ const AddPlace = () => {
 
     let auth = useContext(AuthContext);
     const submitHandler = () => {
-        let data = {};
-
-        data.imageURL = state.inputs[0].value;
-        data.title = state.inputs[1].value;
-        data.description = state.inputs[2].value;
-        data.address = state.inputs[3].value;
-        data.coordinates = state.inputs[4].value;
-        data.creator = auth.userID;
-
-        console.log(data)
+        let data = new FormData();
+        data.append('imageURL', file)
+        data.append('title', state.inputs[1].value)
+        data.append('description', state.inputs[2].value)
+        data.append('address', state.inputs[3].value)
+        data.append('coordinates', state.inputs[4].value)
+        data.append('creator', auth.userID)
 
         axios.post('http://localhost:8000/api/places/new', data, {headers: {authorization: 'bearer ' + auth.token}})
         .then(res => {
