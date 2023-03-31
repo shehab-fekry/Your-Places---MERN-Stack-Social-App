@@ -105,7 +105,7 @@ const AddPlace = () => {
             setPrevMarker(prevMarker);
 
             // saving and validating the coordinates
-            let newState = state;
+            let newState = {...state};
             newState.inputs[4].value = [longitude, latitude];
             newState.inputs[4].isValid = true;
             setState(newState);
@@ -244,7 +244,7 @@ const AddPlace = () => {
     let auth = useContext(AuthContext);
     const submitHandler = () => {
         let data = new FormData();
-        data.append('imageURL', file)
+        data.append('imagePath', file)
         data.append('title', state.inputs[1].value)
         data.append('description', state.inputs[2].value)
         data.append('address', state.inputs[3].value)
@@ -253,7 +253,7 @@ const AddPlace = () => {
 
         axios.post('http://localhost:8000/api/places/new', data, {headers: {authorization: 'bearer ' + auth.token}})
         .then(res => {
-            console.log(res)
+            // console.log(res)
             navigate(`/${auth.userID}/places`)
         })
         .catch(err => console.log(err))
@@ -284,9 +284,7 @@ const AddPlace = () => {
                 disabled={!state.overallValidation}
                 onClick={submitHandler}>Add Place</Button>
             </div>
-            <div ref={mapContainer} className={styles.mapSide}>
-                {/* <div ref={mapContainer}></div> */}
-            </div>
+            <div ref={mapContainer} className={styles.mapSide}></div>
             </div>
         </div>
     )

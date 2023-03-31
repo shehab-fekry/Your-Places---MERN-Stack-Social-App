@@ -19,10 +19,10 @@ app.get('/:placeID', placesCTRLS.getPlaceById);
 app.use(userTokenAuth)
 
 // create new place
-app.post('/new', fileUpload.single('imageURL'), validation, placesCTRLS.createPlace)
+app.post('/new', fileUpload.single('imagePath'), validation, placesCTRLS.createPlace)
 
 // update specific place
-app.patch('/:placeID', validation, placesCTRLS.updatePlaceById);
+app.patch('/:placeID', fileUpload.single('imagePath'), validation, placesCTRLS.updatePlaceById);
 
 // delete specific place
 app.delete('/:placeID/:userID', placesCTRLS.deletePlaceById);

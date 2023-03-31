@@ -65,7 +65,9 @@ exports.createPlace = (req, res, next) => {
 
 exports.updatePlaceById =(req, res, next) => {
     const placeID = req.params.placeID;
-    const {imagePath, title, description, address, coordinates} = req.body;
+    let {title, description, address, coordinates} = req.body;
+    coordinates = {lat: coordinates.split(',')[0], lng: coordinates.split(',')[1]};
+    let imagePath = req.file ? req.file.path : null;
     
     let errorsArray = validationResult(req).errors;
     if(errorsArray.length !== 0){
@@ -79,7 +81,9 @@ exports.updatePlaceById =(req, res, next) => {
             return res.status(401).json({message: `you are not authorized to update this place!`});
         }
 
-        place.imagePath = imagePath;
+        // if user updated post image it will be updated to the new
+        // else it will stay as it was
+        place.imagePath = imagePath ? imagePath : place.imagePath;
         place.title = title;
         place.description = description;
         place.address = address;
