@@ -62,6 +62,15 @@ const JoinUs = () => {
                 isValid: false,
                 errorMessage: 'passwords must match',
             },
+            {
+                element: 'input',
+                type: 'file',
+                label: 'image',
+                value: {},
+                imageURL: '',
+                isValid: false,
+                errorMessage: 'please upload an image',
+            },
         ],
         overallValidation: false,
         isSignUp: false,
@@ -80,7 +89,7 @@ const JoinUs = () => {
 
     const registerHandler = () => {
         let mode = state.isSignUp;
-        let data = {};
+        let data = new FormData();
         let inputValues = [];
 
         state.inputs.forEach(input => {
@@ -88,11 +97,11 @@ const JoinUs = () => {
         })
 
         if(mode === true){
-            data = {};
-            data['name'] = inputValues[0];
-            data['email'] = inputValues[1];
-            data['password'] = inputValues[2];
-            data['confirmPassword'] = inputValues[3];
+            data.append('name', inputValues[0]);
+            data.append('email', inputValues[1]);
+            data.append('password', inputValues[2]);
+            data.append('confirmPassword', inputValues[3]);
+            data.append('imagePath', inputValues[4]);
             axios.post('http://localhost:8000/api/users/signup', data)
             .then(response => {
                 console.log(response)
@@ -133,7 +142,7 @@ const JoinUs = () => {
         } else {
             newInputs = state.inputs;
         }
-        console.log('rendered')
+        // console.log('rendered')
         return newInputs;
     } 
 
@@ -159,11 +168,35 @@ const JoinUs = () => {
                 validateconfirmPass(inputValue, index);
                 break;
             }
+            case 4: {
+                validateImage(event, index);
+                break;
+            }
             default:
                 break;
         }
 
         overallValidation()
+    }
+
+    const validateImage = (event, index) => {
+        const imageFile = event.target.files[0];
+        let imageURL = '';
+        let newState = {...state};
+        
+        newState.inputs[index].value = imageFile ? imageFile : null;
+        newState.inputs[index].isValid = imageFile ? true : false;
+
+        const reader = new FileReader();
+        reader.onload = () => {
+            imageURL = reader.result;
+            newState.inputs[4].imageURL = imageURL;
+            setState(newState)
+            overallValidation()
+        }
+        if(imageFile)
+        reader.readAsDataURL(imageFile);
+
     }
 
     const validateName = (value, index) => {
@@ -237,38 +270,51 @@ const JoinUs = () => {
         })
     }
 
-
     return (
         <div className={styles.joinus}>
-            <div className={styles.card}>
-                {
-                state.inputs.map((input, index) => {
-                    if(!state.isSignUp && (input.label === 'Name' || input.label === 'Confirm Password')){
-                        return null
-                    }
-                    else{
-                        return <Input
-                        key={index}
-                        element={input.element} 
-                        type={input.type} 
-                        label={input.label} 
-                        value={input.value} 
-                        placeholder={input.placeholder}
-                        isValid={input.isValid}
-                        errorMessage={input.errorMessage}
-                        onChange={(e) => onChangeHandler(e, index)}/>
-                    }
-                })
-                }
-                
-                <div className={styles.card_actions}>
-                    <Button 
-                    class={`${btnStyle.pink} ${btnStyle.btn} ${btnStyle.marginLeft}`}
-                    onClick={registerHandler}
-                    disabled={!state.overallValidation}>{state.isSignUp ? 'Sign Up' : 'Sign In'}</Button>
-                    <Button
-                    class={`${btnStyle.inverse} ${btnStyle.btn} ${btnStyle.marginLeft}`}
-                    onClick={switchRegisterMode}>{!state.isSignUp ? 'Sign Up' : 'Sign In'}</Button>
+            <div className={styles.card} style={state.isSignUp ? {} : {width: '500px'}}>
+                <div className={styles.container}>
+                    <div className={styles.input_Side} style={state.isSignUp ? {} : {width: '100%'}}>
+                        {
+                        state.inputs.map((input, index) => {
+                            if(!state.isSignUp && (input.label === 'Name' || input.label === 'Confirm Password')){
+                                return null
+                            }
+                            else{
+                                return index == 4 ? null : <Input
+                                key={index}
+                                element={input.element} 
+                                type={input.type} 
+                                label={input.label} 
+                                value={input.value} 
+                                placeholder={input.placeholder}
+                                isValid={input.isValid}
+                                errorMessage={input.errorMessage}
+                                onChange={(e) => onChangeHandler(e, index)}/>
+                            }
+                        })
+                        }
+                        <div className={styles.card_actions}>
+                            <Button 
+                            class={`${btnStyle.pink} ${btnStyle.btn} ${btnStyle.marginLeft}`}
+                            onClick={registerHandler}
+                            disabled={!state.overallValidation}>{state.isSignUp ? 'Sign Up' : 'Sign In'}</Button>
+                            <Button
+                            class={`${btnStyle.inverse} ${btnStyle.btn} ${btnStyle.marginLeft}`}
+                            onClick={switchRegisterMode}>{!state.isSignUp ? 'Sign Up' : 'Sign In'}</Button>
+                        </div>
+                    </div>
+                    
+                    {state.isSignUp ? <div className={styles.image_Side}>
+                       <div className={styles.image_preview}>
+                            <div> 
+                                {state.inputs[4].value ? <img src={state.inputs[4].imageURL} alt=""/> : 'Pick an Image'}
+                            </div>
+                            <input type="file" 
+                            accept="image/png, image/jpeg, image/jpg" 
+                            onChange={(e) => onChangeHandler(e, 4)}/>
+                        </div>
+                    </div> : null}
                 </div>
             </div>
         </div>

@@ -5,7 +5,7 @@ import Spinner from '../../Shared/Spinner/Spinner';
 
 
 const userList = (props) => {
-    if(props.users.length == 0){
+    if(!props.users){
         return <div className={styles.error}><Spinner/></div>
     }
 
@@ -17,7 +17,7 @@ const userList = (props) => {
                 id = {user._id}
                 key = {user._id}
                 name = {user.name}
-                image = {user.image}
+                image = {user.imagePath}
                 placeCount = {user.places.length}
                 />
             })

@@ -16,7 +16,7 @@ const UserItem = (props) => {
         <Link className={styles.textNone} to={`/${props.id}/places`}>
             <div className={userItemStyle.join(' ')}>
                 <div className={styles.item_head}>
-                    <img src={props.image} alt={props.name}></img>
+                    <img src={`http://localhost:8000/${props.image}`} alt={props.name}></img>
                 </div>
                 <div className={styles.item_body}>
                     <div>{props.name}</div>

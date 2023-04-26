@@ -67,7 +67,7 @@ exports.updatePlaceById =(req, res, next) => {
     const placeID = req.params.placeID;
     let {title, description, address, coordinates} = req.body;
     coordinates = {lat: coordinates.split(',')[0], lng: coordinates.split(',')[1]};
-    let imagePath = req.file ? req.file.path : null;
+    let imagePath = req.file?.path;
     
     let errorsArray = validationResult(req).errors;
     if(errorsArray.length !== 0){

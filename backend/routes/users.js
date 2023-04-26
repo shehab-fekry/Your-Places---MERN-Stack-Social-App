@@ -1,5 +1,6 @@
 const express = require('express');
 const app = express();
+const fileUpload = require('../middlewares/fileUpload');
 
 const usersCTRLS = require('../controllers/usersC');
 const validate = require('../middlewares/validation/usersData');
@@ -11,6 +12,6 @@ app.get('/', usersCTRLS.getAllUsers);
 
 app.post('/signin', signinValidation, usersCTRLS.postSignin)
 
-app.post('/signup', signupValidation, usersCTRLS.postSignup)
+app.post('/signup', fileUpload.single('imagePath'), signupValidation, usersCTRLS.postSignup)
 
 module.exports = app;

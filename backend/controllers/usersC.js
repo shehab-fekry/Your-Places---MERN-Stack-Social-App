@@ -68,6 +68,8 @@ exports.postSignin = (req, res, next) => {
 
 exports.postSignup = (req, res, next) => {
     const {name, email, password, confirmPassword} = req.body;
+    const imagePath = req.file?.path;
+    // console.log(imagePath)
     let errorsArray = validationResult(req).errors;
 
     if(errorsArray.length !== 0){
@@ -80,10 +82,9 @@ exports.postSignup = (req, res, next) => {
         // comparing emails
         Users.find({email: email})
         .then(user => {
-            console.log(user)
             if(user.length === 0){
                 // creating new user
-                let newUser = new Users({name, email, password: hashedPassword});
+                let newUser = new Users({name, email, password: hashedPassword, imagePath});
                 newUser.save()
                 // generating token
                 let token = jwt.sign(
