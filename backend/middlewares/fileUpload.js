@@ -1,7 +1,8 @@
 const multer = require('multer');
 const { v4: uuidv4 } = require('uuid');
 
-// the (Uploads/Images) folders must exist as a base so multer can work. 
+// the (Uploads/Images) folders must exist as a base so multer can work.
+// it is used to save the uploaded images to the server.
 // multer usage in: app.js(16), places.js(22), placesC.js(41), addPlace.js(245), placeList.js(41)
 
 const MIME_TYPE_MAP = {

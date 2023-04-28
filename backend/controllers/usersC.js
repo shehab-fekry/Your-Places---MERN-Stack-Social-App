@@ -15,11 +15,20 @@ exports.getAllUsers = (req, res, next) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(422).json({message: 'Somthing went wrong, please try again!'});
+        res.status(500).json({message: 'Somthing went wrong, please try again!'});
     });
 
 }
 
+
+exports.getUser = (req, res, next) => {
+    let userID = req.params.userID;
+    Users.findById({_id: userID})
+    .then(user => {
+        res.json({user})
+    })
+    .catch(err => console.log(err))
+}
 
 
 exports.postSignin = (req, res, next) => {
@@ -58,7 +67,7 @@ exports.postSignin = (req, res, next) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(422).json({message: 'Somthing went wrong, please try again!'});
+        res.status(500).json({message: 'Somthing went wrong, please try again!'});
     });
 }
 

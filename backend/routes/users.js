@@ -10,6 +10,8 @@ const signupValidation = [validate.name, validate.email, validate.password, vali
 
 app.get('/', usersCTRLS.getAllUsers);
 
+app.get('/:userID', usersCTRLS.getUser);
+
 app.post('/signin', signinValidation, usersCTRLS.postSignin)
 
 app.post('/signup', fileUpload.single('imagePath'), signupValidation, usersCTRLS.postSignup)

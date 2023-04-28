@@ -1,15 +1,16 @@
 import './App.css';
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom';
 import mapboxgl from 'mapbox-gl'; 
-import React from 'react'
-import NavBar from './Shared/Navigation/NavBar';
-import Users from './Users/Pages/Users';
-import AddPlace from './Places/Pages/addPlace';
-import EditPlace from './Places/Pages/editPlace';
-import UserPlaces from './Users/Pages/UserPlaces';
-import JoinUs from './Users/Pages/JoinUs';
+import React, { Suspense, lazy } from 'react'
 import { AuthContext } from './Context/authContext';
 import { useEffect, useState } from 'react';
+
+import NavBar from './Shared/Navigation/NavBar';
+import Users from './Users/Pages/Users';
+const AddPlace   = lazy(() => import('./Places/Pages/addPlace'));
+const EditPlace  = lazy(() => import('./Places/Pages/editPlace'));
+const UserPlaces = lazy(() => import('./Users/Pages/UserPlaces'));
+const JoinUs     = lazy(() => import('./Users/Pages/JoinUs'));
 
 mapboxgl.accessToken = 'pk.eyJ1Ijoic2hlaGFiLWZla3J5IiwiYSI6ImNsODk0eDhkdzAzM2Izb2xhc3ExaGlvNzAifQ.xq9aZ4H9CX2NJ0M8dtNQyA';
 
@@ -67,7 +68,9 @@ function App() {
     <AuthContext.Provider value={{token, isLogedIn: !!token, userID, login, logout}}>
       <BrowserRouter>
         <NavBar/>
-        {routes}
+        <Suspense fallback={<div>loading</div>}>
+          {routes}
+        </Suspense>
       </BrowserRouter>
     </AuthContext.Provider>
   );

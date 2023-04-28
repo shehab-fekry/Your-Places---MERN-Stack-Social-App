@@ -16,7 +16,7 @@ exports.getPlacesByUserId = (req, res, next) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(422).json({message: 'Somthing went wrong, please try again!'});
+        res.status(500).json({message: 'Somthing went wrong, please try again!'});
     });
 }
 
@@ -30,7 +30,7 @@ exports.getPlaceById = (req, res, next) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(422).json({message: 'Somthing went wrong, please try again!'});
+        res.status(500).json({message: 'Somthing went wrong, please try again!'});
     });
 }
 
@@ -58,7 +58,7 @@ exports.createPlace = (req, res, next) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(422).json({message: 'Somthing went wrong, please try again!'});
+        res.status(500).json({message: 'Somthing went wrong, please try again!'});
     });
 }
 
@@ -94,7 +94,7 @@ exports.updatePlaceById =(req, res, next) => {
     })
     .catch(err => {
         console.log(err);
-        res.status(422).json({message: 'Somthing went wrong, please try again!'});
+        res.status(500).json({message: 'Somthing went wrong, please try again!'});
     });
 }
 

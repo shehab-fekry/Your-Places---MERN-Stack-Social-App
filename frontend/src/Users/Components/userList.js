@@ -5,12 +5,15 @@ import Spinner from '../../Shared/Spinner/Spinner';
 
 
 const userList = (props) => {
-    if(!props.users){
-        return <div className={styles.error}><Spinner/></div>
-    }
 
-    return (
-        <div className={styles.userList}>
+    let content = (<div className={styles.error}><Spinner/></div>);
+
+    if(!props.users){
+        content = <div className={styles.userList}><img src={`${process.env.PUBLIC_URL}/Dicovery.svg`}/></div>
+    } 
+    else if (props.users)
+    {
+        content = <div className={styles.userList}>
             {
             props.users.map(user => {
                 return <UserItem
@@ -23,7 +26,9 @@ const userList = (props) => {
             })
             }
         </div>
-    )
+    } 
+
+    return content
 }
 
 export default userList;

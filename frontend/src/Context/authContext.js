@@ -1,7 +1,6 @@
 import { createContext } from 'react';
 
-export const 
-AuthContext = createContext({
+export const AuthContext = createContext({
     userID:{},
     token: null,
     isLogedIn: false,   // (!!) turns token into (true) or (false) in App.js

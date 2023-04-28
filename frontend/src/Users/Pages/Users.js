@@ -8,7 +8,6 @@ const Users = () => {
     useEffect(() => {
         axios.get('http://localhost:8000/api/users')
         .then(data => {
-            // console.log(data.data.users);
             setUsers(data.data.users);
         })
         .catch(err => console.log(err));
